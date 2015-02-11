@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import json, logging, os, pprint
+from django.conf import settings as project_settings
+from django.core.urlresolvers import reverse
 from django.db import models
 
+log = logging.getLogger(__name__)
 
 
 class ShibViewHelper( object ):
@@ -29,7 +33,7 @@ class ShibViewHelper( object ):
 
     def update_session( self, request, validity, shib_dict ):
         request.session[u'shib_login_error'] = validity  # boolean
-        request.session[u'authz_info'][u'authorized'] = validity
+        request.session[u'authorized'] = validity
         if validity:
             request.session[u'user_info'] = {
                 u'name': u'%s %s' % ( shib_dict[u'firstname'], shib_dict[u'lastname'] ),
@@ -44,7 +48,7 @@ class ShibChecker( object ):
 
     def __init__( self ):
         self.TEST_SHIB_JSON = os.environ.get( u'DSHBRD__TEST_SHIB_JSON', u'' )
-        self.SHIB_ERESOURCE_PERMISSION = os.environ[u'DSHBRD__SHIB_ERESOURCE_PERMISSION']
+        self.SHIB_REQUIRED_GROUP = os.environ[u'DSHBRD__SHIB_REQUIRED_GROUP']
 
     def grab_shib_info( self, request ):
         """ Grabs shib values from http-header or dev-settings.
@@ -106,7 +110,7 @@ class ShibChecker( object ):
         """ Returns boolean.
             Called by evaluate_shib_info() """
         eresources_check = False
-        if self.SHIB_ERESOURCE_PERMISSION in shib_dict[u'member_of']:
+        if self.SHIB_REQUIRED_GROUP in shib_dict[u'member_of']:
             eresources_check = True
         log.debug( u'in models.ShibChecker.eresources_allowed(); eresources_check, `%s`' % eresources_check )
         return eresources_check
