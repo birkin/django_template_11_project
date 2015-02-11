@@ -5,6 +5,8 @@ from django.conf import settings as project_settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
+from django.utils.encoding import smart_unicode
+
 
 log = logging.getLogger(__name__)
 
@@ -52,63 +54,55 @@ class Widget(models.Model):
     value_label = models.CharField( max_length=50, help_text='A brief description of the \'value\' in the above \'data points\' key-value pairs.' )
     data_contact_name = models.CharField( max_length=50 )
     data_contact_email_address = models.EmailField()
-    more_info_url = models.URLField( blank=True, verify_exists=True, help_text='Not required, but strongly suggested.' )
+    more_info_url = models.URLField( blank=True, help_text='Not required, but strongly suggested.' )
+    # more_info_url = models.URLField( blank=True, verify_exists=True, help_text='Not required, but strongly suggested.' )
     active = models.BooleanField( default=True, editable=False, help_text='Means data is still being collected for this widget.' )
-    tags = models.ManyToManyField( 'Tag', blank=True, null=True )
+    # tags = models.ManyToManyField( 'Tag', blank=True, null=True )
 
     def __unicode__(self):
         return smart_unicode(self.title)
 
-    def save(self):
-        from dashboard_app import utility_code
-        try:
-            self = utility_code.processData( self )
-            self.slug = self.slug.replace( '-', '_' )
-            super(Widget, self).save() # Call the "real" save() method
-        except Exception, e:
-      # print '\n- exception is: %s' % e
-            self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
-            super(Widget, self).save() # Call the "real" save() method
+    # def save(self):
+    #     from dashboard_app import utility_code
+    #     try:
+    #         self = utility_code.processData( self )
+    #         self.slug = self.slug.replace( '-', '_' )
+    #         super(Widget, self).save() # Call the "real" save() method
+    #     except Exception, e:
+    #   # print '\n- exception is: %s' % e
+    #         self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
+    #         super(Widget, self).save() # Call the "real" save() method
 
-    def _get_trend_direction_text(self):
-        '''Returns trend-direction text from trend-direction integer'''
-        trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
-        return trend_direction_dict[ self.trend_direction ]
-    trend_direction_text = property(_get_trend_direction_text)
+    # def _get_trend_direction_text(self):
+    #     '''Returns trend-direction text from trend-direction integer'''
+    #     trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
+    #     return trend_direction_dict[ self.trend_direction ]
+    # trend_direction_text = property(_get_trend_direction_text)
 
-    def _get_trend_color_text(self):
-        '''Returns trend-color text from trend-color integer'''
-        trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
-        return trend_color_dict[ self.trend_color ]
-    trend_color_text = property(_get_trend_color_text)
+    # def _get_trend_color_text(self):
+    #     '''Returns trend-color text from trend-color integer'''
+    #     trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
+    #     return trend_color_dict[ self.trend_color ]
+    # trend_color_text = property(_get_trend_color_text)
 
-    def _get_minichart_percentages(self):
-        '''Returns values from minichart-percentage calculations'''
-        from dashboard_app import utility_code
-        minichart_tuples = utility_code.extractMinichartData( eval(self.data_points) )
-        minichart_values = [ minichart_tuples[0][1], minichart_tuples[1][1], minichart_tuples[2][1], minichart_tuples[3][1]  ]
-        minichart_percentages = utility_code.makeChartPercentages( minichart_values )
-        return minichart_percentages
-    minichart_percentages = property( _get_minichart_percentages )
+    # def _get_minichart_percentages(self):
+    #     '''Returns values from minichart-percentage calculations'''
+    #     from dashboard_app import utility_code
+    #     minichart_tuples = utility_code.extractMinichartData( eval(self.data_points) )
+    #     minichart_values = [ minichart_tuples[0][1], minichart_tuples[1][1], minichart_tuples[2][1], minichart_tuples[3][1]  ]
+    #     minichart_percentages = utility_code.makeChartPercentages( minichart_values )
+    #     return minichart_percentages
+    # minichart_percentages = property( _get_minichart_percentages )
 
-    def _get_minichart_range(self):
-        '''Returns range-values for minichart'''
-        from dashboard_app import utility_code
-        minichart_range = utility_code.makeChartRanges( self.minichart_percentages )
-        return minichart_range
-    minichart_range = property( _get_minichart_range )
+    # def _get_minichart_range(self):
+    #     '''Returns range-values for minichart'''
+    #     from dashboard_app import utility_code
+    #     minichart_range = utility_code.makeChartRanges( self.minichart_percentages )
+    #     return minichart_range
+    # minichart_range = property( _get_minichart_range )
 
-  # class Admin:
-  #   ordering = [ 'title' ]
-  #   list_display = ( 'title', 'title_info', 'data_contact_name', 'data_contact_email_address' )
-  #   list_filter = [ 'trend_direction', 'best_goal', 'tags' ]
-  #   search_fields = [ 'title', 'title_info' ]
-  #   save_on_top = True
-
-    class Meta:
-        ordering = ['title']
-
-    # end class Widget()
+    # class Meta:
+    #     ordering = ['title']
 
 
 class ShibViewHelper( object ):
