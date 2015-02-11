@@ -4,6 +4,7 @@ import json, logging, os, pprint
 from django.conf import settings as project_settings
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.http import HttpResponseRedirect
 
 log = logging.getLogger(__name__)
 
@@ -20,14 +21,12 @@ class ShibViewHelper( object ):
         log.debug( u'in models.ShibViewHelper.check_shib_headers(); returning validity `%s`' % validity )
         return ( validity, shib_dict )
 
-    def build_response( self, request, validity, shib_dict ):
+    def build_response( self, request, validity, shib_dict, return_url ):
         """ Sets session vars and redirects to the request page,
               which will show the citation form on login-success, and a helpful error message on login-failure.
             Called by views.shib_login() """
         self.update_session( request, validity, shib_dict )
-        scheme = u'https' if request.is_secure() else u'http'
-        redirect_url = u'%s://%s%s' % ( scheme, request.get_host(), reverse(u'request_url') )
-        return_response = HttpResponseRedirect( redirect_url )
+        return_response = HttpResponseRedirect( return_url )
         log.debug( u'in models.ShibViewHelper.build_response(); returning response' )
         return return_response
 

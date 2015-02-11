@@ -29,7 +29,8 @@ def shib_login( request ):
         return HttpResponseRedirect( os.environ[u'DSHBRD__SHIB_LOGIN_URL'] )  # forces reauth if user clicked logout link
     request.session[u'shib_login_error'] = u''  # initialization; updated when response is built
     ( validity, shib_dict ) = shib_view_helper.check_shib_headers( request )
-    return_response = shib_view_helper.build_response( request, validity, shib_dict )
+    return_url = request.GET.get(u'return_url', reverse(u'info_url') )
+    return_response = shib_view_helper.build_response( request, validity, shib_dict, return_url )
     log.debug( u'in views.shib_login(); about to return response' )
     return return_response
 
