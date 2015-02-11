@@ -9,6 +9,108 @@ from django.http import HttpResponseRedirect
 log = logging.getLogger(__name__)
 
 
+class Widget(models.Model):
+    """ TODO: old original code; update! """
+
+    BEST_GOAL_CHOICES = (
+        (1, 'Higher'),
+        (-1, 'Lower'),
+        )
+
+    TREND_COLOR_CHOICES = (
+        (1, 'Good'),
+        (-1, 'Bad'),
+        (0, 'Not Applicable'),
+        )
+
+    TREND_DIRECTION_CHOICES = (
+        (1, 'Up'),
+        (-1, 'Down'),
+        (0, 'Flat'),
+        )
+
+    title = models.CharField( unique=True, max_length=50 )
+    slug = models.SlugField()
+  # slug = models.SlugField( unique=True, prepopulate_from=('title',), help_text='Usually filled in automatically from the title; should be lowercase words separated by hyphens. Used in urls.' )
+    title_info = models.TextField()
+    baseline_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
+    baseline_info = models.TextField( blank=True )
+    best_goal = models.IntegerField( choices=BEST_GOAL_CHOICES, help_text='Required. Note, sometimes the \'best\' number will be the lowest one (example: tracking Missing Books).' )
+  # best_goal = models.IntegerField( choices=BEST_GOAL_CHOICES, radio_admin=True, help_text='Required. Note, sometimes the \'best\' number will be the lowest one (example: tracking Missing Books).' )
+    best_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
+    best_value_info = models.TextField( blank=True )
+    current_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
+    current_value_info = models.TextField( blank=True )
+    trend_direction = models.IntegerField( null=True, blank=True, editable=False, choices=TREND_DIRECTION_CHOICES, help_text='Filled automatically from data_points.' )
+  # trend_direction = models.IntegerField( null=True, blank=True, editable=False, choices=TREND_DIRECTION_CHOICES, radio_admin=True, help_text='Filled automatically from data_points.' )
+    trend_color = models.IntegerField( null=True, blank=True, editable=False, choices=TREND_COLOR_CHOICES, help_text='Filled automatically from data_points and \'best goal\'.')
+  # trend_color = models.IntegerField( null=True, blank=True, editable=False, choices=TREND_COLOR_CHOICES, radio_admin=True, help_text='Filled automatically from data_points and \'best goal\'.')
+    trend_info = models.TextField( blank=True )
+    data_points = models.TextField( help_text='Data may be filled programatically. If entered manually, it should consist of key-value pairs, formatted like this: [ (\'March_2008\', 123), (\'April_2008\', 252) ]' )
+    max_data_points_count = models.IntegerField( null=True, blank=True, help_text='Optional. Maximum number of data_points; i.e. 12 for a yearly month-by-month widget.')
+    key_label = models.CharField( max_length=50, help_text='A brief description of the \'key\' in the above \'data points\' key-value pairs.' )
+    value_label = models.CharField( max_length=50, help_text='A brief description of the \'value\' in the above \'data points\' key-value pairs.' )
+    data_contact_name = models.CharField( max_length=50 )
+    data_contact_email_address = models.EmailField()
+    more_info_url = models.URLField( blank=True, verify_exists=True, help_text='Not required, but strongly suggested.' )
+    active = models.BooleanField( default=True, editable=False, help_text='Means data is still being collected for this widget.' )
+    tags = models.ManyToManyField( 'Tag', blank=True, null=True )
+
+    def __unicode__(self):
+        return smart_unicode(self.title)
+
+    def save(self):
+        from dashboard_app import utility_code
+        try:
+            self = utility_code.processData( self )
+            self.slug = self.slug.replace( '-', '_' )
+            super(Widget, self).save() # Call the "real" save() method
+        except Exception, e:
+      # print '\n- exception is: %s' % e
+            self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
+            super(Widget, self).save() # Call the "real" save() method
+
+    def _get_trend_direction_text(self):
+        '''Returns trend-direction text from trend-direction integer'''
+        trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
+        return trend_direction_dict[ self.trend_direction ]
+    trend_direction_text = property(_get_trend_direction_text)
+
+    def _get_trend_color_text(self):
+        '''Returns trend-color text from trend-color integer'''
+        trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
+        return trend_color_dict[ self.trend_color ]
+    trend_color_text = property(_get_trend_color_text)
+
+    def _get_minichart_percentages(self):
+        '''Returns values from minichart-percentage calculations'''
+        from dashboard_app import utility_code
+        minichart_tuples = utility_code.extractMinichartData( eval(self.data_points) )
+        minichart_values = [ minichart_tuples[0][1], minichart_tuples[1][1], minichart_tuples[2][1], minichart_tuples[3][1]  ]
+        minichart_percentages = utility_code.makeChartPercentages( minichart_values )
+        return minichart_percentages
+    minichart_percentages = property( _get_minichart_percentages )
+
+    def _get_minichart_range(self):
+        '''Returns range-values for minichart'''
+        from dashboard_app import utility_code
+        minichart_range = utility_code.makeChartRanges( self.minichart_percentages )
+        return minichart_range
+    minichart_range = property( _get_minichart_range )
+
+  # class Admin:
+  #   ordering = [ 'title' ]
+  #   list_display = ( 'title', 'title_info', 'data_contact_name', 'data_contact_email_address' )
+  #   list_filter = [ 'trend_direction', 'best_goal', 'tags' ]
+  #   search_fields = [ 'title', 'title_info' ]
+  #   save_on_top = True
+
+    class Meta:
+        ordering = ['title']
+
+    # end class Widget()
+
+
 class ShibViewHelper( object ):
     """ Contains helpers for views.shib_login() """
 

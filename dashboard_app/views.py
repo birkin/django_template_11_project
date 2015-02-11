@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from dashboard_app import models
-
+from dashboard_app.models import Widget
 
 log = logging.getLogger(__name__)
 shib_view_helper = models.ShibViewHelper()
@@ -19,6 +19,27 @@ def info( request ):
         u'email_general_help': os.environ[u'DSHBRD__EMAIL_GENERAL_HELP'],
         }
     return render( request, u'dashboard_app_templates/info.html', context )
+
+
+def widget( request, identifier ):
+    """ Displays requested widget. """
+    # widget_instance = Widget.objects.get( slug=identifier )
+    # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
+    # trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
+    # minichart_tuples = utility_code.extractMinichartData( eval(widget_instance.data_points) )
+    # minichart_values = [ minichart_tuples[0][1], minichart_tuples[1][1], minichart_tuples[2][1], minichart_tuples[3][1]  ]
+    # minichart_percentages = utility_code.makeChartPercentages( minichart_values )
+    # minichart_range = utility_code.makeChartRanges( minichart_percentages )
+    # page_dict = {
+    #     'media_directory':project_settings.MEDIA_URL,
+    #     'widget':widget_instance,
+    #     'trend_direction':trend_direction_dict[ widget_instance.trend_direction ],
+    #     'trend_color':trend_color_dict[ widget_instance.trend_color ],
+    #     'minichart_percentages':minichart_percentages,
+    #     'minichart_range':minichart_range,
+    #     }
+    # return render_to_response( 'dashboard/widget.html', page_dict )
+    return HttpResponse( u'coming' )
 
 
 def shib_login( request ):
