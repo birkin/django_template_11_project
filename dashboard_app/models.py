@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import json, logging, os, pprint
+import json, logging, os, pprint, itertools
 from django.conf import settings as project_settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.utils.encoding import smart_unicode
-
+from django.utils.text import slugify
 
 log = logging.getLogger(__name__)
 
@@ -31,8 +31,8 @@ class Widget(models.Model):
         (0, 'Flat'),
         )
 
-    title = models.CharField( unique=True, max_length=50 )
-    slug = models.SlugField()
+    title = models.CharField( unique=True, max_length=30 )
+    slug = models.SlugField( unique=True )
   # slug = models.SlugField( unique=True, prepopulate_from=('title',), help_text='Usually filled in automatically from the title; should be lowercase words separated by hyphens. Used in urls.' )
     title_info = models.TextField()
     baseline_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
@@ -61,6 +61,14 @@ class Widget(models.Model):
 
     def __unicode__(self):
         return smart_unicode(self.title)
+
+    # def save( self ):
+    #     new_slug = slugify( self.title )
+    #     for x in itertools.count(1):
+    #         if not Widget.objects.filter(slug=new_slug).exists():
+    #             break
+    #     self.slug = u'%s-%d' % (new_slug, x)
+    #     super(Widget, self).save() # Call the "real" save() method
 
     # def save(self):
     #     from dashboard_app import utility_code
