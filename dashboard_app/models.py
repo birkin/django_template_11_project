@@ -38,7 +38,6 @@ class Widget(models.Model):
     baseline_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
     baseline_info = models.TextField( blank=True )
     best_goal = models.IntegerField( choices=BEST_GOAL_CHOICES, help_text='Required. Note, sometimes the \'best\' number will be the lowest one (example: tracking Missing Books).' )
-  # best_goal = models.IntegerField( choices=BEST_GOAL_CHOICES, radio_admin=True, help_text='Required. Note, sometimes the \'best\' number will be the lowest one (example: tracking Missing Books).' )
     best_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
     best_value_info = models.TextField( blank=True )
     current_value = models.IntegerField( null=True, blank=True, editable=False, help_text='Filled automatically from data_points.' )
@@ -61,14 +60,6 @@ class Widget(models.Model):
 
     def __unicode__(self):
         return smart_unicode(self.title)
-
-    # def save( self ):
-    #     new_slug = slugify( self.title )
-    #     for x in itertools.count(1):
-    #         if not Widget.objects.filter(slug=new_slug).exists():
-    #             break
-    #     self.slug = u'%s-%d' % (new_slug, x)
-    #     super(Widget, self).save() # Call the "real" save() method
 
     # def save(self):
     #     from dashboard_app import utility_code
