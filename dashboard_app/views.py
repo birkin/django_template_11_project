@@ -16,13 +16,15 @@ shib_view_helper = models.ShibViewHelper()
 def info( request ):
     """ Returns info page. """
     context = {
-        u'email_general_help': os.environ[u'DSHBRD__EMAIL_GENERAL_HELP'],
-        }
+        u'email_general_help': os.environ[u'DSHBRD__EMAIL_GENERAL_HELP'] }
     return render( request, u'dashboard_app_templates/info.html', context )
 
 
 def widget( request, identifier ):
     """ Displays requested widget. """
+    from django.shortcuts import get_object_or_404
+    widget = get_object_or_404( Widget, slug=identifier )
+
     # widget_instance = Widget.objects.get( slug=identifier )
     # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
     # trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
@@ -39,7 +41,8 @@ def widget( request, identifier ):
     #     'minichart_range':minichart_range,
     #     }
     # return render_to_response( 'dashboard/widget.html', page_dict )
-    return HttpResponse( u'coming' )
+    return HttpResponse( widget.title )
+    # return HttpResponse( u'coming' )
 
 
 def shib_login( request ):
