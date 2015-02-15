@@ -58,12 +58,13 @@ class Widget(models.Model):
         return smart_unicode(self.title)
 
     def save(self):
+        wh = WidgetHelper()
         try:
-            self = utility_code.processData( self )
-            self.slug = self.slug.replace( '-', '_' )
+            self = wh.process_data( self )
+            # self = utility_code.processData( self )
             super(Widget, self).save() # Call the "real" save() method
         except Exception, e:
-      # print '\n- exception is: %s' % e
+            log.debug( u'EXCEPTION, %s' % unicode(repr(e)) )
             self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
             super(Widget, self).save() # Call the "real" save() method
 
@@ -113,7 +114,7 @@ class Widget(models.Model):
 class WidgetHelper( object ):
     """ Contains helpers for processing Widget() data. """
 
-    def processData( self, widget_instance ):
+    def process_data( self, widget_instance ):
       '''
       - Called by: models.Widget()
       - Purpose: to turn the input list of tuples into appropriate values.
