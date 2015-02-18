@@ -13,8 +13,8 @@ class WidgetHelperTest(TestCase):
         """ Tests process_data(). """
         w = Widget()
         w.best_goal = 1  # best is higher -- think higher circulation being good
-        w.data_points = "[ ('97/98', 183179), ('98/99', 178095), ('99/00', 172425), ('00/01', 159397), ('01/02', 168697), ('02/03', 191740), ('03/04', 188981), ('04/05', 188298), ('05/06', 198735), ('06/07', 183533) ]"
-        processed_w = widget_helper.processData( w )
+        w.data_points = '[ {"97/98": 183179}, {"98/99": 178095}, {"99/00": 172425}, {"00/01": 159397}, {"01/02": 168697}, {"02/03": 191740}, {"03/04": 188981}, {"04/05": 188298}, {"05/06": 198735}, {"06/07": 183533} ]'
+        processed_w = widget_helper.process_data( w )
         ## baseline
         self.assertEqual( 183179, processed_w.baseline_value )
         ## best
@@ -28,7 +28,8 @@ class WidgetHelperTest(TestCase):
         ## tests 'best' when best is 'lower', think missing books
         w2 = Widget()
         w2.best_goal = -1
-        w2.data_points = "[ ('97/98', 183179), ('98/99', 178095), ('99/00', 172425), ('00/01', 159397), ('01/02', 168697), ('02/03', 191740), ('03/04', 188981), ('04/05', 188298), ('05/06', 198735), ('06/07', 183533) ]"
-        processed_w2 = widget_helper.processData( w2 )
+        # w2.data_points = "[ ('97/98', 183179), ('98/99', 178095), ('99/00', 172425), ('00/01', 159397), ('01/02', 168697), ('02/03', 191740), ('03/04', 188981), ('04/05', 188298), ('05/06', 198735), ('06/07', 183533) ]"
+        w2.data_points = '[ {"97/98": 183179}, {"98/99": 178095}, {"99/00": 172425}, {"00/01": 159397}, {"01/02": 168697}, {"02/03": 191740}, {"03/04": 188981}, {"04/05": 188298}, {"05/06": 198735}, {"06/07": 183533} ]'
+        processed_w2 = widget_helper.process_data( w2 )
         ## best
         self.assertEqual( 159397, processed_w2.best_value )

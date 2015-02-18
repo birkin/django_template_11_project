@@ -16,20 +16,17 @@ class Widget(models.Model):
 
     BEST_GOAL_CHOICES = (
         (1, 'Higher'),
-        (-1, 'Lower'),
-        )
+        (-1, 'Lower'), )
 
     TREND_COLOR_CHOICES = (
         (1, 'Good'),
         (-1, 'Bad'),
-        (0, 'Not Applicable'),
-        )
+        (0, 'Not Applicable'), )
 
     TREND_DIRECTION_CHOICES = (
         (1, 'Up'),
         (-1, 'Down'),
-        (0, 'Flat'),
-        )
+        (0, 'Flat'), )
 
     title = models.CharField( unique=True, max_length=30 )
     slug = models.SlugField( unique=True )
@@ -44,7 +41,7 @@ class Widget(models.Model):
     trend_direction = models.IntegerField( null=True, blank=True, choices=TREND_DIRECTION_CHOICES, help_text='Filled automatically from data_points.' )
     trend_color = models.IntegerField( null=True, blank=True, choices=TREND_COLOR_CHOICES, help_text='Filled automatically from data_points and \'best goal\'.')
     trend_info = models.TextField( blank=True )
-    data_points = models.TextField( help_text='Data may be filled programatically. If entered manually, it should consist of key-value pairs, formatted like this: [ (\'March_2008\', 123), (\'April_2008\', 252) ]' )
+    data_points = models.TextField( help_text='Data may be filled programatically. If entered manually, it should consist of valid json, formatted like this: [ {"March_2008": 123}, {"April_2008": 456} ]' )
     max_data_points_count = models.IntegerField( null=True, blank=True, help_text='Optional. Maximum number of data_points; i.e. 12 for a yearly month-by-month widget.')
     key_label = models.CharField( max_length=50, help_text='A brief description of the \'key\' in the above \'data points\' key-value pairs.' )
     value_label = models.CharField( max_length=50, help_text='A brief description of the \'value\' in the above \'data points\' key-value pairs.' )
@@ -61,7 +58,6 @@ class Widget(models.Model):
         wh = WidgetHelper()
         try:
             self = wh.process_data( self )
-            # self = utility_code.processData( self )
             super(Widget, self).save() # Call the "real" save() method
         except Exception, e:
             log.debug( u'EXCEPTION, %s' % unicode(repr(e)) )
@@ -117,188 +113,59 @@ class WidgetHelper( object ):
     def process_data( self, widget ):
         """ Ensures data points are valid, and calculates and sets values for certain fields.
             Called by Widget() """
-        ## ensure data's valid
-        try:
-            json.loads( widget.data_points )
-            return widget
-        except:
-            raise Exception( u'problem with submitted data; check it' )
+        lst = self.validate_data( widget.data_points )
+        widget.baseline_value = lst[0].values()[0]
+        widget.best_value = self.get_best_value( widget.best_goal, lst )
+        widget.current_value = lst[-1].values()[0]
+        widget.trend_direction = self.get_trend_direction( widget.current_value, lst )
+        widget.trend_color = self.get_trend_color( widget.trend_direction, widget.best_goal )
+        return widget
 
-      # try:
+    def validate_data( self, data ):
+        """ Ensures data is a list of dicts.
+            Called by process_data() """
+        lst = json.loads( data )
+        for dct in lst:
+            assert type( dct ) == dict
+        return lst
 
-      #   # a bit of cleanup in case user entered data with returns
-      #   # print '- widget.data_points is: %s' % widget.data_points
-      #   start_data = widget.data_points
-      #   # print '- start_data is: %s' % start_data
-      #   # print '--'
-      #   # print '\r' in start_data
-      #   # print '--'
-      #   start_data.replace( '\r\n', '' ) # none of this works (trying to allow data with newlines to be pasted in; don't seem to be able to remove 'em)
-      #   start_data.replace( '\n', '' )
-      #   start_data.replace( '\r', '' )
-      #   start_data.replace( '\r', '' )
-      #   start_data.replace( '\r', '' )
-      #   # print '- start_data is now: %s' % start_data
-      #   # print '--'
-      #   # print '\r' in start_data
-      #   # print '--'
-      #   # print '- type(start_data) is: %s' % type(start_data)
-      #   widget.data_points = start_data
-      #   # print '- widget.data_points is: %s' % widget.data_points
-      #   data = eval( widget.data_points )
-      #   # print '- data is: %s' % data
-      #   widget.best_goal = int( widget.best_goal ) # dunno why this was a unicode value; should've been an int; this fixes
+    def get_best_value( self, best_goal, lst ):
+        """ Grabs best value in list, which will be the highest or lowest, depending on widget.best_goal.
+            Called by process_data() """
+        initial_value = lst[0].values()[0]
+        ( high_value, low_value ) = ( initial_value, initial_value )
+        for dct in lst:
+            value = dct.values()[0]
+            high_value = value if (value > high_value) else high_value
+            low_value = value if (value < low_value) else low_value
+        if best_goal == 1:  # best is higher
+            return_val = high_value
+        else:
+            return_val = low_value
+        return return_val
 
-      #   # baseline value
-      #   first_tuple = data[0]
-      #   widget.baseline_value = first_tuple[1]
+    def get_trend_direction( self, current_value, lst ):
+        """ Grabs trend direction.
+            Called by process_data() """
+        previous_value = lst[-2].values()[0]
+        if current_value > previous_value:
+            trend_direction = 1
+        elif current_value == previous_value:
+            trend_direction = 0
+        else:
+            trend_direction = -1
+        return trend_direction
 
-      #   # 'best' value
-      #   best_value = None
-      #   if widget.best_goal == 1:  # best is higher
-      #     for the_tuple in data:
-      #       if best_value == None:
-      #         best_value = the_tuple[1]
-      #       if the_tuple[1] > best_value:
-      #         best_value = the_tuple[1]
-      #   else:                               # best is lower
-      #     for the_tuple in data:
-      #       if best_value == None:
-      #         best_value = the_tuple[1]
-      #       if the_tuple[1] < best_value:
-      #         best_value = the_tuple[1]
-      #   widget.best_value = best_value
-      #   # best_value = None
-      #   # for the_tuple in data:
-      #   #   if best_value == None:
-      #   #     best_value = the_tuple[1]
-      #   #   if the_tuple[1] > best_value:
-      #   #     best_value = the_tuple[1]
-      #   # widget.best_value = best_value
-
-      #   # current value
-      #   last_tuple = data[ len(data)-1 ]
-      #   widget.current_value = last_tuple[1]
-
-      #   # trend value
-      #   next_to_last_tuple = data[ len(data)-2 ]
-      #   previous_value = next_to_last_tuple[1]
-      #   if widget.current_value > previous_value:
-      #     widget.trend_direction = 1
-      #   elif widget.current_value == previous_value:
-      #     widget.trend_direction = 0
-      #   else:
-      #     widget.trend_direction = -1
-
-      #   # trend color
-      #   if widget.trend_direction == 0:
-      #     widget.trend_color = 0
-      #   elif widget.trend_direction == widget.best_goal:
-      #     widget.trend_color = 1
-      #   else:
-      #     widget.trend_color = -1
-
-      #   # all set
-      #   return widget
-
-      # except Exception, e:
-
-      #   # print '\n- in utility_code.processData(); exception is: %s' % e
-      #   raise Exception('problem with entered data; check it')
-
-      # # end def processData()
-
-
-
-    # def process_data( self, widget_instance ):
-    #   '''
-    #   - Called by: models.Widget()
-    #   - Purpose: to turn the input list of tuples into appropriate values.
-    #   '''
-
-    #   try:
-
-    #     # a bit of cleanup in case user entered data with returns
-    #     # print '- widget_instance.data_points is: %s' % widget_instance.data_points
-    #     start_data = widget_instance.data_points
-    #     # print '- start_data is: %s' % start_data
-    #     # print '--'
-    #     # print '\r' in start_data
-    #     # print '--'
-    #     start_data.replace( '\r\n', '' ) # none of this works (trying to allow data with newlines to be pasted in; don't seem to be able to remove 'em)
-    #     start_data.replace( '\n', '' )
-    #     start_data.replace( '\r', '' )
-    #     start_data.replace( '\r', '' )
-    #     start_data.replace( '\r', '' )
-    #     # print '- start_data is now: %s' % start_data
-    #     # print '--'
-    #     # print '\r' in start_data
-    #     # print '--'
-    #     # print '- type(start_data) is: %s' % type(start_data)
-    #     widget_instance.data_points = start_data
-    #     # print '- widget_instance.data_points is: %s' % widget_instance.data_points
-    #     data = eval( widget_instance.data_points )
-    #     # print '- data is: %s' % data
-    #     widget_instance.best_goal = int( widget_instance.best_goal ) # dunno why this was a unicode value; should've been an int; this fixes
-
-    #     # baseline value
-    #     first_tuple = data[0]
-    #     widget_instance.baseline_value = first_tuple[1]
-
-    #     # 'best' value
-    #     best_value = None
-    #     if widget_instance.best_goal == 1:  # best is higher
-    #       for the_tuple in data:
-    #         if best_value == None:
-    #           best_value = the_tuple[1]
-    #         if the_tuple[1] > best_value:
-    #           best_value = the_tuple[1]
-    #     else:                               # best is lower
-    #       for the_tuple in data:
-    #         if best_value == None:
-    #           best_value = the_tuple[1]
-    #         if the_tuple[1] < best_value:
-    #           best_value = the_tuple[1]
-    #     widget_instance.best_value = best_value
-    #     # best_value = None
-    #     # for the_tuple in data:
-    #     #   if best_value == None:
-    #     #     best_value = the_tuple[1]
-    #     #   if the_tuple[1] > best_value:
-    #     #     best_value = the_tuple[1]
-    #     # widget_instance.best_value = best_value
-
-    #     # current value
-    #     last_tuple = data[ len(data)-1 ]
-    #     widget_instance.current_value = last_tuple[1]
-
-    #     # trend value
-    #     next_to_last_tuple = data[ len(data)-2 ]
-    #     previous_value = next_to_last_tuple[1]
-    #     if widget_instance.current_value > previous_value:
-    #       widget_instance.trend_direction = 1
-    #     elif widget_instance.current_value == previous_value:
-    #       widget_instance.trend_direction = 0
-    #     else:
-    #       widget_instance.trend_direction = -1
-
-    #     # trend color
-    #     if widget_instance.trend_direction == 0:
-    #       widget_instance.trend_color = 0
-    #     elif widget_instance.trend_direction == widget_instance.best_goal:
-    #       widget_instance.trend_color = 1
-    #     else:
-    #       widget_instance.trend_color = -1
-
-    #     # all set
-    #     return widget_instance
-
-    #   except Exception, e:
-
-    #     # print '\n- in utility_code.processData(); exception is: %s' % e
-    #     raise Exception('problem with entered data; check it')
-
-    #   # end def processData()
+    def get_trend_color( self, trend_direction, best_goal ):
+        """ Sets the trend color based on the trend-direction and best-goal.
+            Called by process_data() """
+        if trend_direction == 0:
+            trend_color = 0
+        elif trend_direction == best_goal:
+            trend_color = 1
+        else:
+            trend_color = -1
+        return trend_color
 
     # end class WidgetHelper()
 
