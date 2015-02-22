@@ -45,6 +45,12 @@ def widget( request, identifier ):
     # return HttpResponse( u'coming' )
 
 
+def request_widget( request ):
+    """ STUB
+        Displays/handles form for requesting a widget. """
+    return HttpResponse( u'request-widget url' )
+
+
 def shib_login( request ):
     """ Examines shib headers, sets session-auth, & returns user to request page. """
     log.debug( u'in views.shib_login(); starting' )

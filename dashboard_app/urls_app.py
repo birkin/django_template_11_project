@@ -8,6 +8,8 @@ urlpatterns = patterns('',
 
     url( r'^info/$',  'dashboard_app.views.info', name=u'info_url' ),
 
+    url( r'^request_widget/$',  'dashboard_app.views.request_widget', name=u'request_widget_url' ),
+
     url( r'^widget/(?P<identifier>[^/]+)/$',  'dashboard_app.views.widget', name=u'widget_url' ),
 
     url( r'^shib_login/$',  'dashboard_app.views.shib_login', name=u'shib_login_url' ),
