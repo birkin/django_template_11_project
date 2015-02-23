@@ -50,6 +50,8 @@ dashboard info
     <p>Links...</p>
     <ul>
         <li><a href="{% url 'dashboard_app.views.request_widget' %}">Request a widget</a></li>
+        <li><a href="{{ first_widget_url }}">Example individual widget</a></li>
+        <li><a href="{% url 'dashboard_app.views.tag' 'easyborrow' %}">Example widget tag</a></li>
     </ul>
 </div>
 

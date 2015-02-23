@@ -15,8 +15,11 @@ shib_view_helper = models.ShibViewHelper()
 
 def info( request ):
     """ Returns info page. """
+    first_widget = Widget.objects.all()[0]
     context = {
-        u'email_general_help': os.environ[u'DSHBRD__EMAIL_GENERAL_HELP'] }
+        u'email_general_help': os.environ[u'DSHBRD__EMAIL_GENERAL_HELP'],
+        u'first_widget_url': reverse( u'widget_url', kwargs={u'identifier': first_widget.slug} )
+        }
     return render( request, u'dashboard_app_templates/info.html', context )
 
 
@@ -49,6 +52,12 @@ def request_widget( request ):
     """ STUB
         Displays/handles form for requesting a widget. """
     return HttpResponse( u'request-widget url' )
+
+
+def tag( request, tag ):
+    """ STUB
+        Displays set of widgets for given tag. """
+    return HttpResponse( u'tag url' )
 
 
 def shib_login( request ):
