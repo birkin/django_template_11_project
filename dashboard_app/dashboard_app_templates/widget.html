@@ -1,0 +1,108 @@
+{% load humanize %}
+
+<div class="widget_info">
+
+    <style type="text/css">
+        .widget_container {
+            width:300px;
+            /*margin-left:30%;*/
+            /*margin-right:30%;*/
+            }
+        .widget {
+            position:relative;
+            border-top:none;
+            border-right:solid 1px;
+            border-bottom:solid 1px;
+            border-left:solid 1px;
+            height:95px;
+            background-color:rgb(240,240,240);
+            /*border-style:outset;*/
+            }
+        .title {
+            position:relative;
+            border-top:solid 1px;
+            border-right:solid 1px;
+            border-bottom:dotted 1px;
+            border-left:solid 1px;
+            padding-top:5px;
+            padding-bottom:5px;
+            background-color:rgb(200,200,200);
+            /*padding-left:20px;*/
+            /*border-style:outset;*/
+            }
+        .title p {
+            margin:0px;
+            padding:0px;
+            text-align:center;
+            /*font-style: bold;*/
+            }
+        .baseline {
+            position:absolute;
+            left:10px;
+            top:70px;
+            }
+        .best {
+            position:absolute;
+            left:10px;
+            top:10px;
+            }
+        .current {
+            position:absolute;
+            right:10px;
+            top:10px;
+            }
+        .trend {
+            position:absolute;
+            right:10px;
+            top:58px;
+            }
+        .trend a img {
+            border:none;
+            }
+        .more_info {
+            position:absolute;
+            left:38%;
+            top:30%;
+            }
+        .more_info a img {
+            border:none;
+            }
+    </style>
+
+    <div class="widget_container">
+
+        <div class="title"><p title="{{ widget.title_info }}"><strong>{{ widget.title }}</strong></p></div>
+
+        <div class="widget">
+
+            <div class="baseline" title="'baseline' -- {{ widget.baseline_info }}">{{ widget.baseline_value|intcomma }}</div>
+
+            <div class="best" title="'best' -- {{ widget.best_value_info }}">{{ widget.best_value|intcomma }}</div>
+
+            <div class="current" title="'current' -- {{ widget.current_value_info }}">{{ widget.current_value|intcomma }}</div>
+
+            <div class="trend" title="'trend' -- {{ widget.trend_info }}">
+                <img src="{{media_directory}}images/{{ widget.trend_direction_text }}_{{ widget.trend_color_text }}.png"/>
+                <!-- <img src="{{media_directory}}images/{{ trend_direction }}_{{ trend_color }}.png"/> -->
+            </div>
+
+            <div class="more_info" title="'more info' -- Rough summary of data. Click for more detailed info. Widget contact is {{ widget.data_contact_name }}, at {{ widget.data_contact_email_address }}.">
+                <a href="/dashboard/widget_detail/{{ widget.slug }}/">
+                    <img src="http://chart.apis.google.com/chart?cht=lc
+                        &amp;chs=75x40
+                        &amp;chd=t:{{ widget.minichart_percentages.0 }},{{ widget.minichart_percentages.1 }},{{ widget.minichart_percentages.2 }},{{ widget.minichart_percentages.3 }}
+                        &amp;chds={{ widget.minichart_range.0 }},{{ widget.minichart_range.1 }}"
+                        alt="Mini-chart with line in yellow" />
+                    <!-- <img src="http://chart.apis.google.com/chart?cht=lc
+                        &amp;chs=75x40
+                        &amp;chd=t:{{ minichart_percentages.0 }},{{ minichart_percentages.1 }},{{ minichart_percentages.2 }},{{ minichart_percentages.3 }}
+                        &amp;chds={{ minichart_range.0 }},{{ minichart_range.1 }}"
+                        alt="Mini-chart with line in yellow" /> -->
+                </a>
+            </div>
+
+        </div> <!-- end div class="widget" -->
+
+    </div> <!-- end div class="widget_container" -->
+
+</div> <!-- end div class="widget_info" -->
