@@ -11,6 +11,8 @@ from dashboard_app.models import Widget
 
 log = logging.getLogger(__name__)
 shib_view_helper = models.ShibViewHelper()
+widget_helper = models.WidgetHelper()
+minichart_maker = models.MinichartMaker()
 
 
 def info( request ):
@@ -27,6 +29,7 @@ def widget( request, identifier ):
     """ Displays requested widget. """
     from django.shortcuts import get_object_or_404
     widget = get_object_or_404( Widget, slug=identifier )
+    ( trend_direction_dict, trend_color_dict ) = widget_helper.get_trend_dicts()
 
     # widget_instance = Widget.objects.get( slug=identifier )
     # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }

@@ -167,7 +167,21 @@ class WidgetHelper( object ):
             trend_color = -1
         return trend_color
 
+    def get_trend_dicts( self ):
+        """ Returns static dicts.
+            Called by views.widget() """
+        trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
+        trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
+        return ( trend_direction_dict, trend_color_dict )
+
     # end class WidgetHelper()
+
+
+class MinichartMaker( object ):
+    """ Contains helpers for creating the minichart. """
+
+    def foo( self ):
+        return bar
 
 
 class ShibViewHelper( object ):
