@@ -180,6 +180,11 @@ class WidgetHelper( object ):
 class MinichartMaker( object ):
     """ Contains helpers for creating the minichart. """
 
+    def prep_data( self, data_dict ):
+        """ Prepares data-dict for given widget's data.
+            Called by views.widget() """
+        return
+
     def foo( self ):
         return bar
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import logging, os, pprint
+import json, logging, os, pprint
 from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
@@ -30,6 +30,8 @@ def widget( request, identifier ):
     from django.shortcuts import get_object_or_404
     widget = get_object_or_404( Widget, slug=identifier )
     ( trend_direction_dict, trend_color_dict ) = widget_helper.get_trend_dicts()
+    minichart_data = minichart_maker.prep_data( json.loads(widget.data_points) )
+    log.debug( u'in views.widget(); minichart_data, `%s`' % minichart_data )
 
     # widget_instance = Widget.objects.get( slug=identifier )
     # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
