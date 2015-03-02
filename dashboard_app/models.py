@@ -185,8 +185,45 @@ class MinichartMaker( object ):
             Called by views.widget() """
         return
 
-    def foo( self ):
-        return bar
+    def extract_data_elements( self, lst ):
+
+        second = int( round( len(lst)/3 ) )
+        third = second + second
+        return_lst = [ lst[0], lst[second], lst[third], lst[-1] ]
+        return return_lst
+
+        # len_minus_ends = len(lst) - 2
+
+        # if list_length < 5:
+        #   return lst
+
+        # first_position = 0
+
+        # if (list_length % 3) > 1:
+        #   second_initial = (list_length // 3) + 1
+        # else:
+        #   second_initial = (list_length // 3)
+        # second_position = second_initial - 1
+
+        # if ( (list_length * 2) % 3 ) > 1:
+        #   third_initial = ( (list_length * 2) // 3 ) + 1
+        # else:
+        #   third_initial = ( (list_length * 2) // 3 )
+        # third_position = third_initial - 1
+
+        # fourth_position = list_length - 1
+
+        # # make the list
+        # return_list = []
+        # return_list.append( lst[first_position] )
+        # return_list.append( lst[second_position] )
+        # return_list.append( lst[third_position] )
+        # return_list.append( lst[fourth_position] )
+
+        # # all set
+        # return return_list
+
+        # return u'bar'
 
 
 class ShibViewHelper( object ):

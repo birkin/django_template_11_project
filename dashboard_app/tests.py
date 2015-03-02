@@ -41,7 +41,10 @@ class MinichartMakerTest(TestCase):
     def test_extract_minichart_data(self):
         """ Tests the four expected datapoints. """
         minichart_maker = MinichartMaker()
-        data_points = '[ {"97/98": 183179}, {"98/99": 178095}, {"99/00": 172425}, {"00/01": 159397}, {"01/02": 168697}, {"02/03": 191740}, {"03/04": 188981}, {"04/05": 188298}, {"05/06": 198735}, {"06/07": 183533} ]'
+        # data_points = '[ {"97/98": 183179}, {"98/99": 178095}, {"99/00": 172425}, {"00/01": 159397}, {"01/02": 168697}, {"02/03": 191740}, {"03/04": 188981}, {"04/05": 188298}, {"05/06": 198735}, {"06/07": 183533} ]'
+        lst = [ 1, 2, 3, 4, 5, 6, 7 ]
         self.assertEqual(
-            u'foo', minichart_maker.extract_minichart_data( json.loads(data_points) )
-            )
+            [ 1, 3, 5, 7 ], minichart_maker.extract_data_elements(lst) )
+        lst = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+        self.assertEqual(
+            [ 1, 4, 7, 10 ], minichart_maker.extract_data_elements(lst) )
