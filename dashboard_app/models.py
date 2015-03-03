@@ -174,7 +174,7 @@ class WidgetHelper( object ):
         trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
         return ( trend_direction_dict, trend_color_dict )
 
-    # end class WidgetHelper()
+    # end class WidgetHelper
 
 
 class MinichartMaker( object ):
@@ -186,44 +186,15 @@ class MinichartMaker( object ):
         return
 
     def extract_data_elements( self, lst ):
+        """ Pulls out the middle four elements for crude thumbnail display.
+            Called by SOMETHING. """
+        one_third = int( round( len(lst)/3 ) )
+        two_thirds = int( round( (2*len(lst))/3 ) )
+        thumb_lst = [ lst[0], lst[one_third], lst[two_thirds], lst[-1] ]
+        log.debug( u'in models.MinichartMaker.extract_data_elements(); list, `%s`; thumb_lst validity `%s`' % (lst, thumb_lst) )
+        return thumb_lst
 
-        second = int( round( len(lst)/3 ) )
-        third = second + second
-        return_lst = [ lst[0], lst[second], lst[third], lst[-1] ]
-        return return_lst
-
-        # len_minus_ends = len(lst) - 2
-
-        # if list_length < 5:
-        #   return lst
-
-        # first_position = 0
-
-        # if (list_length % 3) > 1:
-        #   second_initial = (list_length // 3) + 1
-        # else:
-        #   second_initial = (list_length // 3)
-        # second_position = second_initial - 1
-
-        # if ( (list_length * 2) % 3 ) > 1:
-        #   third_initial = ( (list_length * 2) // 3 ) + 1
-        # else:
-        #   third_initial = ( (list_length * 2) // 3 )
-        # third_position = third_initial - 1
-
-        # fourth_position = list_length - 1
-
-        # # make the list
-        # return_list = []
-        # return_list.append( lst[first_position] )
-        # return_list.append( lst[second_position] )
-        # return_list.append( lst[third_position] )
-        # return_list.append( lst[fourth_position] )
-
-        # # all set
-        # return return_list
-
-        # return u'bar'
+    # end class MinichartMaker
 
 
 class ShibViewHelper( object ):
@@ -257,6 +228,8 @@ class ShibViewHelper( object ):
                 u'patron_barcode': shib_dict[u'patron_barcode'] }
             request.session[u'shib_login_error'] = False
         return
+
+    # end class ShibViewHelper
 
 
 class ShibChecker( object ):
@@ -330,3 +303,5 @@ class ShibChecker( object ):
             eresources_check = True
         log.debug( u'in models.ShibChecker.eresources_allowed(); eresources_check, `%s`' % eresources_check )
         return eresources_check
+
+    # end class ShibChecker
