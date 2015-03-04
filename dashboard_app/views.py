@@ -29,9 +29,11 @@ def widget( request, identifier ):
     """ Displays requested widget. """
     from django.shortcuts import get_object_or_404
     widget = get_object_or_404( Widget, slug=identifier )
-    ( trend_direction_dict, trend_color_dict ) = widget_helper.get_trend_dicts()
-    minichart_data = minichart_maker.prep_data( json.loads(widget.data_points) )
-    log.debug( u'in views.widget(); minichart_data, `%s`' % minichart_data )
+    return HttpResponse( widget.json_data )
+
+    # ( trend_direction_dict, trend_color_dict ) = widget_helper.get_trend_dicts()
+    # return HttpResponse( widget.title )
+
 
     # widget_instance = Widget.objects.get( slug=identifier )
     # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
@@ -49,7 +51,6 @@ def widget( request, identifier ):
     #     'minichart_range':minichart_range,
     #     }
     # return render_to_response( 'dashboard/widget.html', page_dict )
-    return HttpResponse( widget.title )
     # return HttpResponse( u'coming' )
 
 
@@ -62,6 +63,7 @@ def request_widget( request ):
 def tag( request, tag ):
     """ STUB
         Displays set of widgets for given tag. """
+    # minichart_data = minichart_maker.prep_data( json.loads(widget.data_points) )  # will be used here, not in widget view
     return HttpResponse( u'tag url' )
 
 

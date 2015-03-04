@@ -64,16 +64,12 @@ class Widget(models.Model):
             self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
             super(Widget, self).save() # Call the "real" save() method
 
-    # def save(self):
-    #     from dashboard_app import utility_code
-    #     try:
-    #         self = utility_code.processData( self )
-    #         self.slug = self.slug.replace( '-', '_' )
-    #         super(Widget, self).save() # Call the "real" save() method
-    #     except Exception, e:
-    #   # print '\n- exception is: %s' % e
-    #         self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
-    #         super(Widget, self).save() # Call the "real" save() method
+    def _json_data( self ):
+        """ Returns widget data as json. """
+        widget_helper = WidgetHelper()
+        jsn = widget_helper.output_json( self )
+        return jsn
+    json_data = property( _json_data )
 
     # def _get_trend_direction_text(self):
     #     '''Returns trend-direction text from trend-direction integer'''
@@ -112,7 +108,7 @@ class WidgetHelper( object ):
 
     def process_data( self, widget ):
         """ Ensures data points are valid, and calculates and sets values for certain fields.
-            Called by Widget() """
+            Called by Widget.save() """
         lst = self.validate_data( widget.data_points )
         widget.baseline_value = lst[0].values()[0]
         widget.best_value = self.get_best_value( widget.best_goal, lst )
@@ -169,10 +165,17 @@ class WidgetHelper( object ):
 
     def get_trend_dicts( self ):
         """ Returns static dicts.
-            Called by views.widget() """
+            Called by Widget.SOME_PROPERTY? """
         trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
         trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
         return ( trend_direction_dict, trend_color_dict )
+
+    def output_json( self, widget ):
+        """ Returns widget data in json format.
+            Called by Widget.SOME_PROPERTY? """
+        dct = { u'title': widget.title }
+        jsn = json.dumps( dct, sort_keys=True, indent=2 )
+        return jsn
 
     # end class WidgetHelper
 
