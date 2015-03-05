@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import json, logging, os, pprint, itertools
+import datetime, json, logging, os, pprint, itertools
 from django.conf import settings as project_settings
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -172,8 +172,35 @@ class WidgetHelper( object ):
 
     def output_json( self, widget ):
         """ Returns widget data in json format.
-            Called by Widget.SOME_PROPERTY? """
-        dct = { u'title': widget.title }
+            Called by Widget.json_data """
+        main_info = {
+            u'title': widget.title,
+            u'slug': widget.slug,
+            u'data_points': widget.data_points,
+            u'key_label': widget.key_label,
+            u'value_label': widget.value_label,
+            u'data_contact_name': widget.data_contact_name,
+            u'data_contact_email_address': widget.data_contact_email_address,
+            u'more_info_url': widget.more_info_url,
+            }
+        additional_info = {
+            u'title_info': widget.title_info,
+            u'baseline_value': widget.baseline_value,
+            u'baseline_info': widget.baseline_info,
+            u'best_goal': widget.best_goal,
+            u'best_value': widget.best_value,
+            u'best_value_info': widget.best_value_info,
+            u'current_value': widget.current_value,
+            u'current_value_info': widget.current_value_info,
+            u'trend_direction': widget.trend_direction,
+            u'trend_color': widget.trend_color,
+            u'max_data_points_count': widget.max_data_points_count,
+            }
+        dct = {
+            u'data_main': main_info,
+            u'data_other': additional_info,
+            u'request_datetime': unicode( datetime.datetime.now() )
+            }
         jsn = json.dumps( dct, sort_keys=True, indent=2 )
         return jsn
 
