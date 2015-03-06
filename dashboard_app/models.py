@@ -64,12 +64,11 @@ class Widget(models.Model):
             self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
             super(Widget, self).save() # Call the "real" save() method
 
-    def _json_data( self ):
+    def get_json( self, url ):
         """ Returns widget data as json. """
         widget_helper = WidgetHelper()
-        jsn = widget_helper.output_json( self )
+        jsn = widget_helper.output_json( self, url )
         return jsn
-    json_data = property( _json_data )
 
     # def _get_trend_direction_text(self):
     #     '''Returns trend-direction text from trend-direction integer'''
@@ -101,6 +100,8 @@ class Widget(models.Model):
 
     # class Meta:
     #     ordering = ['title']
+
+    # end class Widget
 
 
 class WidgetHelper( object ):
@@ -170,7 +171,7 @@ class WidgetHelper( object ):
         trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
         return ( trend_direction_dict, trend_color_dict )
 
-    def output_json( self, widget ):
+    def output_json( self, widget, url ):
         """ Returns widget data in json format.
             Called by Widget.json_data """
         main_info = {
@@ -199,7 +200,8 @@ class WidgetHelper( object ):
         dct = {
             u'data_main': main_info,
             u'data_other': additional_info,
-            u'request_datetime': unicode( datetime.datetime.now() )
+            u'request_datetime': unicode( datetime.datetime.now() ),
+            u'request_url': url
             }
         jsn = json.dumps( dct, sort_keys=True, indent=2 )
         return jsn
@@ -207,13 +209,19 @@ class WidgetHelper( object ):
     # end class WidgetHelper
 
 
+class ChartMaker( object ):
+    """ Contains helpers for creating the main chart. """
+
+    def prep_data( self, data_points ):
+        """ Calls helper functions for preparing data.
+            Called by views.widget() """
+        return ( u'values', 'percentages', u'range', u'keys' )
+
+    # end clas ChartMaker
+
+
 class MinichartMaker( object ):
     """ Contains helpers for creating the minichart. """
-
-    def prep_data( self, data_dict ):
-        """ Prepares data-dict for given widget's data.
-            Called by views.widget() """
-        return
 
     def extract_data_elements( self, lst ):
         """ Pulls out the middle four elements for crude thumbnail display.
