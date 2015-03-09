@@ -64,11 +64,11 @@ class Widget(models.Model):
             self.data_points = 'INVALID_DATA: -->' + self.data_points + '<--'
             super(Widget, self).save() # Call the "real" save() method
 
-    def get_json( self, url ):
-        """ Returns widget data as json. """
+    def get_jdict( self, url ):
+        """ Returns widget data in json-compatible dict. """
         widget_helper = WidgetHelper()
-        jsn = widget_helper.output_json( self, url )
-        return jsn
+        jdct = widget_helper.output_jdict( self, url )
+        return jdct
 
     # def _get_trend_direction_text(self):
     #     '''Returns trend-direction text from trend-direction integer'''
@@ -171,8 +171,8 @@ class WidgetHelper( object ):
         trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
         return ( trend_direction_dict, trend_color_dict )
 
-    def output_json( self, widget, url ):
-        """ Returns widget data in json format.
+    def output_jdict( self, widget, url ):
+        """ Returns widget data in json-compatible dict format.
             Called by Widget.json_data """
         main_info = {
             u'title': widget.title,
@@ -203,8 +203,7 @@ class WidgetHelper( object ):
             u'request_datetime': unicode( datetime.datetime.now() ),
             u'request_url': url
             }
-        jsn = json.dumps( dct, sort_keys=True, indent=2 )
-        return jsn
+        return dct
 
     # end class WidgetHelper
 

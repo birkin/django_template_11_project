@@ -5,7 +5,7 @@ from django.conf import settings as project_settings
 from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from dashboard_app import models
 from dashboard_app.models import Widget
 
@@ -28,12 +28,17 @@ def info( request ):
 
 def widget( request, identifier ):
     """ Displays requested widget. """
-    from django.shortcuts import get_object_or_404
+    # from django.shortcuts import get_object_or_404
     widget = get_object_or_404( Widget, slug=identifier )
     ( chart_values, chart_percentages, chart_range, chart_keys ) = chart_helper.prep_data( widget.data_points )
-
-    jsn = widget.get_json( request.build_absolute_uri() )
-    return HttpResponse( jsn )
+    jdict = widget.get_jdict( request.build_absolute_uri() )
+    if request.GET.get( u'format', None ) == u'json':
+        output = json.dumps( jdict, sort_keys=True, indent=2 )
+        if request.GET.get( u'callback', None ):
+            output = u'%s(%s)' % ( request.GET.get(u'callback'), output )
+        return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
+    else:
+        return HttpResponse( jdict[u'data_main'][u'title'] )
 
     # widget_instance = Widget.objects.get( slug=identifier )
     # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
