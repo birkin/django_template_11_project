@@ -1,0 +1,41 @@
+{% load humanize %}
+
+<div id="widget_detail">
+	<style>
+		#big_chart_container {
+			background-color:EFEFEF;
+			height:395px;
+			width:820px;
+			}
+		#big_chart_image {
+			padding:10px;
+			}
+	</style>
+	<div id="big_chart_container">
+		<div id="big_chart_image">
+			<img src="http://chart.apis.google.com/chart?cht=lc
+				&amp;chs=800x375
+				&amp;chd=t:{% for percentage in detailchart_percentages %}{{percentage}}{% if not forloop.last %},{% endif %}{% endfor %}
+				&amp;chds={{ detailchart_range.0 }},{{ detailchart_range.1 }}
+				&amp;chtt={{ widget.title|urlencode }}
+				&amp;chts=76A4FB,20
+				&amp;chf=c,lg,0,76A4FB,1,ffffff,0|bg,s,EFEFEF
+				&amp;chxt=x,x,x
+				&amp;chxl=0:|{% for key in detailchart_keys %}{{ key }}|{% endfor %}1:|{% for value in detailchart_values %}{{ value|intcomma }}|{% endfor %}2:|{{ widget.key_label }} and {{ widget.value_label }}
+				&amp;chxp=0|1|2,50
+				&amp;chxs=2,76A4FB,12,0
+				{% if data_index %}
+				&amp;chm=c,FF0000,0,{{ data_index|add:"-1" }}.0,20.0 {% comment %} The 'add' template-filter is used because the url passes a 1-based index-number to the template, but the google-chart-api uses a zero-based index-number here. {% endcomment %}
+				{% endif %}"
+				alt="detail line-chart showing {{ widget.key_label }} and {{ widget.value_label }}" />
+		</div> <!-- end div id="big_chart_image" -->
+	</div> <!-- end div id="big_chart_container" -->
+	<ul>
+		<li>Data contact: <a href="mailto:{{ widget.data_contact_email_address }}">{{ widget.data_contact_name }}</a></li>
+		{% if widget.more_info_url %}
+		<li>More info: <a href="{{ widget.more_info_url }}">{{ widget.more_info_url }}</a></li>
+		{% endif %}
+		<li>RSS feed of data: <a href="{{ host }}feeds/widget_data/{{ widget.slug }}/">{{ host }}feeds/widget_data/{{ widget.slug }}/</a></li>
+		<li>Widget url: <a href="{{ host }}widget/{{ widget.slug }}/">{{ host }}widget/{{ widget.slug }}/</a></li>
+	</ul>
+</div> <!-- end div id="widget_detail" -->

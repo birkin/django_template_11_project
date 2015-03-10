@@ -38,25 +38,40 @@ def widget( request, identifier ):
             output = u'%s(%s)' % ( request.GET.get(u'callback'), output )
         return HttpResponse( output, content_type = u'application/javascript; charset=utf-8' )
     else:
-        return HttpResponse( jdict[u'data_main'][u'title'] )
+        # return HttpResponse( jdict[u'data_main'][u'title'] )
+        context = {
+            u'title': jdict[u'data_main'][u'title']
+            }
+        return render( request, u'dashboard_app_templates/widget_detail.html', context )
+
 
     # widget_instance = Widget.objects.get( slug=identifier )
-    # trend_direction_dict = { 1:'up', -1:'down', 0:'flat' }
-    # trend_color_dict = { 1:'blue', -1:'red', 0:'blank' }
-    # minichart_tuples = utility_code.extractMinichartData( eval(widget_instance.data_points) )
-    # minichart_values = [ minichart_tuples[0][1], minichart_tuples[1][1], minichart_tuples[2][1], minichart_tuples[3][1]  ]
-    # minichart_percentages = utility_code.makeChartPercentages( minichart_values )
-    # minichart_range = utility_code.makeChartRanges( minichart_percentages )
+
+    # detailchart_tuples = eval( widget_instance.data_points )
+
+    # detailchart_values = []
+    # for element in detailchart_tuples:
+    #     detailchart_values.append( element[1] )
+
+    # detailchart_percentages = utility_code.makeChartPercentages( detailchart_values )
+
+    # detailchart_range = utility_code.makeChartRanges( detailchart_percentages )
+
+    # detailchart_keys = []
+    # for element in detailchart_tuples:
+    #     detailchart_keys.append( element[0] )
+
     # page_dict = {
-    #     'media_directory':project_settings.MEDIA_URL,
+    #     'host':settings_app.HOST_URL_BASE,
     #     'widget':widget_instance,
-    #     'trend_direction':trend_direction_dict[ widget_instance.trend_direction ],
-    #     'trend_color':trend_color_dict[ widget_instance.trend_color ],
-    #     'minichart_percentages':minichart_percentages,
-    #     'minichart_range':minichart_range,
+    #     'detailchart_percentages':detailchart_percentages,
+    #     'detailchart_range':detailchart_range,
+    #     'detailchart_keys':detailchart_keys,
+    #     'detailchart_values':detailchart_values,
+    #     'data_index':int(data_index)
+    #     # 'data_index':int(data_index) - 1 # so url can look 1-based, whereas google chart-api is zero-based
     #     }
-    # return render_to_response( 'dashboard/widget.html', page_dict )
-    # return HttpResponse( u'coming' )
+    # return render_to_response( 'dashboard/info.html', page_dict )
 
 
 def request_widget( request ):
