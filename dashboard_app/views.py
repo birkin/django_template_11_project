@@ -40,7 +40,11 @@ def widget( request, identifier ):
     else:
         # return HttpResponse( jdict[u'data_main'][u'title'] )
         context = {
-            u'title': jdict[u'data_main'][u'title']
+            u'widget': widget,
+            u'detailchart_percentages': chart_percentages,
+            u'detailchart_range': chart_range,
+            u'detailchart_keys': chart_keys,
+            u'data_index': 0  # so url can look 1-based, whereas google chart-api is zero-based
             }
         return render( request, u'dashboard_app_templates/widget_detail.html', context )
 
