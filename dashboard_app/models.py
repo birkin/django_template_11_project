@@ -214,9 +214,34 @@ class ChartMaker( object ):
     def prep_data( self, data_points ):
         """ Calls helper functions for preparing data.
             Called by views.widget() """
+        values = self.extract_values( data_points )
+        percentages = self.make_percentages( values )
         return ( u'values', 'percentages', u'range', u'keys' )
 
-    # end clas ChartMaker
+    def extract_values( self, data_points ):
+        """ Returns values from list of dcts.
+            Called by prep_data() """
+        values = []
+        for dct in data_points:
+            values.append( dct.items()[0][1] )
+        return values
+
+    def make_percentages( self, values ):
+        """ Returns percentages needed by google-chart api for given list of values.
+            Called by prep_data() """
+        ( percentages, high_number ) = ( [], max(values) )
+        high_number_divisor = high_number * .01
+        for number in values:
+            if high_number_divisor == 0:
+                raw_percentage = 0
+            else:
+                raw_percentage = number / high_number_divisor
+            rounded_raw_percentage = round( raw_percentage )
+            percentages.append( rounded_raw_percentage )
+        log.debug( u'in models.ChartMaker.make_percentages(); percentages, `%s`' % percentages )
+        return percentages
+
+    # end class ChartMaker
 
 
 class MinichartMaker( object ):

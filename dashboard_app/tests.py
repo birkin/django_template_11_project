@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from dashboard_app.models import Widget, WidgetHelper, MinichartMaker
+from dashboard_app.models import Widget, WidgetHelper, ChartMaker, MinichartMaker
 from django.test import TestCase
 
 widget_helper = WidgetHelper()
@@ -34,6 +34,19 @@ class WidgetHelperTest(TestCase):
         self.assertEqual( 159397, processed_w2.best_value )
 
     # end class WidgetHelperTest
+
+
+class ChartMakerTest(TestCase):
+    """ Tests for non-django models.ChartMaker() """
+
+    def test_make_percentages(self):
+        """ Tests example lists. """
+        cm = ChartMaker()
+        lst = [ 1, 2, 3, 4, 5, 6, 7 ]
+        self.assertEqual(
+            [ 14.0, 29.0, 43.0, 57.0, 71.0, 86.0, 100.0 ], cm.make_percentages(lst) )
+
+    # end class ChartMakerTest
 
 
 class MinichartMakerTest(TestCase):
