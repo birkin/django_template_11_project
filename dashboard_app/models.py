@@ -214,17 +214,33 @@ class ChartMaker( object ):
     def prep_data( self, data_points ):
         """ Calls helper functions for preparing data.
             Called by views.widget() """
-        values = self.extract_values( data_points )
+        ( keys, values ) = self.extract_values( data_points )
+        # values = self.extract_values( data_points )
         percentages = self.make_percentages( values )
-        return ( u'values', 'percentages', u'range', u'keys' )
+        ranges = self.make_ranges( percentages )
+        return ( values, percentages, ranges, keys )
+        # return ( u'values', 'percentages', u'range', u'keys' )
 
     def extract_values( self, data_points ):
         """ Returns values from list of dcts.
             Called by prep_data() """
-        values = []
-        for dct in data_points:
+        log.debug( u'in models.ChartMaker.extract_values(); data_points, `%s`; type(data_points), `%s`' % (pprint.pformat(data_points), type(data_points)) )
+        ( keys, values ) = ( [], [] )
+        for dct in json.loads( data_points ):
+            keys.append( dct.items()[0][0] )
             values.append( dct.items()[0][1] )
-        return values
+        log.debug( u'in models.ChartMaker.extract_values(); keys, `%s`; values, `%s`' % (keys, values) )
+        return ( keys, values )
+
+    # def extract_values( self, data_points ):
+    #     """ Returns values from list of dcts.
+    #         Called by prep_data() """
+    #     log.debug( u'in models.ChartMaker.extract_values(); data_points, `%s`; type(data_points), `%s`' % (pprint.pformat(data_points), type(data_points)) )
+    #     values = []
+    #     for dct in json.loads( data_points ):
+    #         values.append( dct.items()[0][1] )
+    #     log.debug( u'in models.ChartMaker.extract_values(); values, `%s`' % values )
+    #     return values
 
     def make_percentages( self, values ):
         """ Returns percentages needed by google-chart api for given list of values.
@@ -240,6 +256,15 @@ class ChartMaker( object ):
             percentages.append( rounded_raw_percentage )
         log.debug( u'in models.ChartMaker.make_percentages(); percentages, `%s`' % percentages )
         return percentages
+
+    def make_ranges( self, percentages ):
+        """ Returns ranges to be used by google-chart api.
+            Called by prep_data() """
+        high = max( percentages ) + 5
+        low = min( percentages ) - 5
+        ranges = [ low, high ]
+        log.debug( u'in models.ChartMaker.make_percentages(); ranges, `%s`' % ranges )
+        return ranges
 
     # end class ChartMaker
 
