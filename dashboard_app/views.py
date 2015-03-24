@@ -12,7 +12,7 @@ from dashboard_app.models import Widget
 log = logging.getLogger(__name__)
 shib_view_helper = models.ShibViewHelper()
 widget_helper = models.WidgetHelper()
-chart_helper = models.ChartMaker()
+chart_maker = models.ChartMaker()
 minichart_maker = models.MinichartMaker()
 
 
@@ -30,7 +30,8 @@ def widget( request, identifier ):
     """ Displays requested widget. """
     # from django.shortcuts import get_object_or_404
     widget = get_object_or_404( Widget, slug=identifier )
-    ( chart_values, chart_percentages, chart_range, chart_keys ) = chart_helper.prep_data( widget.data_points )
+    ( chart_values, chart_percentages, chart_range, chart_keys ) = chart_maker.prep_data( widget.data_points )
+    gchart_detail_url = chart_maker.prep_gchart_detail_url()
     jdict = widget.get_jdict( request.build_absolute_uri() )
     if request.GET.get( u'format', None ) == u'json':
         output = json.dumps( jdict, sort_keys=True, indent=2 )

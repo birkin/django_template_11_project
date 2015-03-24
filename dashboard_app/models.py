@@ -232,16 +232,6 @@ class ChartMaker( object ):
         log.debug( u'in models.ChartMaker.extract_values(); keys, `%s`; values, `%s`' % (keys, values) )
         return ( keys, values )
 
-    # def extract_values( self, data_points ):
-    #     """ Returns values from list of dcts.
-    #         Called by prep_data() """
-    #     log.debug( u'in models.ChartMaker.extract_values(); data_points, `%s`; type(data_points), `%s`' % (pprint.pformat(data_points), type(data_points)) )
-    #     values = []
-    #     for dct in json.loads( data_points ):
-    #         values.append( dct.items()[0][1] )
-    #     log.debug( u'in models.ChartMaker.extract_values(); values, `%s`' % values )
-    #     return values
-
     def make_percentages( self, values ):
         """ Returns percentages needed by google-chart api for given list of values.
             Called by prep_data() """
@@ -265,6 +255,28 @@ class ChartMaker( object ):
         ranges = [ low, high ]
         log.debug( u'in models.ChartMaker.make_percentages(); ranges, `%s`' % ranges )
         return ranges
+
+    def prep_gchart_detail_url( self ):
+        """ Assembles google-chart url for detail chart.
+            Called by views.widget() """
+
+        # <img src="http://chart.apis.google.com/chart?cht=lc
+        #     &amp;chs=800x375
+        #     &amp;chd=t:{% for percentage in detailchart_percentages %}{{percentage}}{% if not forloop.last %},{% endif %}{% endfor %}
+        #     &amp;chds={{ detailchart_range.0 }},{{ detailchart_range.1 }}
+        #     &amp;chtt={{ widget.title|urlencode }}
+        #     &amp;chts=76A4FB,20
+        #     &amp;chf=c,lg,0,76A4FB,1,ffffff,0|bg,s,EFEFEF
+        #     &amp;chxt=x,x,x
+        #     &amp;chxl=0:|{% for key in detailchart_keys %}{{ key }}|{% endfor %}1:|{% for value in detailchart_values %}{{ value|intcomma }}|{% endfor %}2:|{{ widget.key_label }} and {{ widget.value_label }}
+        #     &amp;chxp=0|1|2,50
+        #     &amp;chxs=2,76A4FB,12,0
+        #     {% if data_index %}
+        #     &amp;chm=c,FF0000,0,{{ data_index|add:"-1" }}.0,20.0 {% comment %} The 'add' template-filter is used because the url passes a 1-based index-number to the template, but the google-chart-api uses a zero-based index-number here. {% endcomment %}
+        #     {% endif %}"
+        #     alt="detail line-chart showing {{ widget.key_label }} and {{ widget.value_label }}" />
+
+        pass
 
     # end class ChartMaker
 
