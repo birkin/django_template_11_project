@@ -20,7 +20,9 @@
 </div> <!-- end div id="widget_detail" -->
 
 <script type="text/javascript">
+	// <https://developers.google.com/chart/interactive/docs/gallery/linechart>
 	google.load( 'visualization', '1', {packages: ['corechart']} );
+	// google.load( 'visualization', '1', {packages: ['line']} );
 	google.setOnLoadCallback( drawChart );
 	function drawChart() {
 		var data = new google.visualization.DataTable();
@@ -55,12 +57,20 @@
 			]
 		);
 		var options = {
-			width: 1000,
+			width: 750,
 			height: 563,
 			hAxis: { title: 'Time' },
-			vAxis: { title: 'Popularity' }
+			vAxis: { title: 'Popularity' },
+			curveType: "function",
+			legend: { position: 'bottom' },
+			backgroundColor: "white",
+			// legend.position: "bottom"
+			pointShape: "diamond"
 		};
 		var chart = new google.visualization.LineChart( document.getElementById('chart') );
-		chart.draw(data, options);
+		// var chart = new google.charts.Line( document.getElementById('chart') );
+		chart.draw( data, options );
+		// chart.draw(data, google.charts.Line.convertOptions( options) );
+
 	}  // end `function drawChart() {`
 </script>
