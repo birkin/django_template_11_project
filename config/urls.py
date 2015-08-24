@@ -10,6 +10,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url( r'^', include('dashboard_app.urls_app') ),
+    url( r'^', include('app_x.urls_app') ),
 
 )

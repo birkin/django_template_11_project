@@ -1,14 +1,8 @@
 """
-Django settings for dashboard_project.
+Django settings for django_template_project.
 
-Environmental variables set in project's env/bin/activate, when using runserver,
-  or env/bin/activate_this.py, when using apache via mod_wsgi or passenger.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
+Environmental variables triggered in project's env_min_djng/bin/activate, when using runserver,
+  or env_min_djng/bin/activate_this.py, when using apache via passenger.
 """
 
 import json, os
@@ -21,16 +15,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DSHBRD__SECRET_KEY']
+SECRET_KEY = os.environ['DJANGO_TEMPLATE__SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-temp_DEBUG = os.environ['DSHBRD__DEBUG']
+temp_DEBUG = os.environ['DJANGO_TEMPLATE__DEBUG']
 assert temp_DEBUG in [ 'True', '' ], Exception( 'DEBUG env setting is, "%s"; must be either "True" or ""' % temp_DEBUG )
 DEBUG = bool( temp_DEBUG )
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = json.loads( os.environ['DSHBRD__ALLOWED_HOSTS'] )  # list
+ALLOWED_HOSTS = json.loads( os.environ['DJANGO_TEMPLATE__ALLOWED_HOSTS'] )  # list
 
 
 # Application definition
@@ -43,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dashboard_app',
+    'app_x',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,9 +49,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'dashboard_config.urls'
+ROOT_URLCONF = 'config.urls'
 
-WSGI_APPLICATION = 'dashboard_config.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -65,12 +59,12 @@ WSGI_APPLICATION = 'dashboard_config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ['DSHBRD__DATABASES_ENGINE'],
-        'NAME': os.environ['DSHBRD__DATABASES_NAME'],
-        'USER': os.environ['DSHBRD__DATABASES_USER'],
-        'PASSWORD': os.environ['DSHBRD__DATABASES_PASSWORD'],
-        'HOST': os.environ['DSHBRD__DATABASES_HOST'],
-        'PORT': os.environ['DSHBRD__DATABASES_PORT'],
+        'ENGINE': os.environ['DJANGO_TEMPLATE__DATABASES_ENGINE'],
+        'NAME': os.environ['DJANGO_TEMPLATE__DATABASES_NAME'],
+        'USER': os.environ['DJANGO_TEMPLATE__DATABASES_USER'],
+        'PASSWORD': os.environ['DJANGO_TEMPLATE__DATABASES_PASSWORD'],
+        'HOST': os.environ['DJANGO_TEMPLATE__DATABASES_HOST'],
+        'PORT': os.environ['DJANGO_TEMPLATE__DATABASES_PORT'],
     }
 }
 
@@ -92,18 +86,18 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = os.environ['DSHBRD__STATIC_URL']
-STATIC_ROOT = os.environ['DSHBRD__STATIC_ROOT']  # needed for collectstatic command
+STATIC_URL = os.environ['DJANGO_TEMPLATE__STATIC_URL']
+STATIC_ROOT = os.environ['DJANGO_TEMPLATE__STATIC_ROOT']  # needed for collectstatic command
 
 
 # Templates
 
-TEMPLATE_DIRS = json.loads( os.environ['DSHBRD__TEMPLATE_DIRS'] )  # list
+TEMPLATE_DIRS = json.loads( os.environ['DJANGO_TEMPLATE__TEMPLATE_DIRS'] )  # list
 
 
 # Email
-EMAIL_HOST = os.environ['DSHBRD__EMAIL_HOST']
-EMAIL_PORT = int( os.environ['DSHBRD__EMAIL_PORT'] )
+EMAIL_HOST = os.environ['DJANGO_TEMPLATE__EMAIL_HOST']
+EMAIL_PORT = int( os.environ['DJANGO_TEMPLATE__EMAIL_PORT'] )
 
 
 # sessions
@@ -128,7 +122,7 @@ LOGGING = {
         'logfile': {
             'level':'DEBUG',
             'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
-            'filename': os.environ.get(u'DSHBRD__LOG_PATH'),
+            'filename': os.environ.get(u'DJANGO_TEMPLATE__LOG_PATH'),
             'formatter': 'standard',
         },
         'console':{
@@ -138,9 +132,9 @@ LOGGING = {
         },
     },
     'loggers': {
-        'dashboard_app': {
+        'app_x': {
             'handlers': ['logfile'],
-            'level': os.environ.get(u'DSHBRD__LOG_LEVEL'),
+            'level': os.environ.get(u'DJANGO_TEMPLATE__LOG_LEVEL'),
         },
     }
 }
