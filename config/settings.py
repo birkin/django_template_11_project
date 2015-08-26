@@ -18,9 +18,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ['DJANGO_TEMPLATE__SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-temp_DEBUG = os.environ['DJANGO_TEMPLATE__DEBUG']
-assert temp_DEBUG in [ 'True', '' ], Exception( 'DEBUG env setting is, "%s"; must be either "True" or ""' % temp_DEBUG )
-DEBUG = bool( temp_DEBUG )
+temp_DEBUG = json.loads( os.environ['DJANGO_TEMPLATE__DEBUG_JSON'] )
+assert temp_DEBUG in [ True, False ], Exception( 'DEBUG env setting is, "%s"' )
+DEBUG = temp_DEBUG
 
 TEMPLATE_DEBUG = DEBUG
 
