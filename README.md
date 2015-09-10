@@ -2,6 +2,12 @@
 
 UNDER CONSTRUCTION
 
-Minimalist [passenger](https://www.phusionpassenger.com)-compatible [django](https://www.djangoproject.com) project.
+Application which will take:
+
+- a callnumber
+- a title
+- a title and author
+
+...and return information on ebooks the library may have.
 
 ---
