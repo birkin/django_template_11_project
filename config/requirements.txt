@@ -1,4 +1,3 @@
-dj-database-url
 Django
 PyMySQL
 requests
