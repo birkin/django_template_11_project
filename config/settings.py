@@ -8,7 +8,7 @@ Environmental variables triggered in project's env_min_djng/bin/activate, when u
   or env_min_djng/bin/activate_this.py, when using apache via passenger.
 """
 
-import json, os
+import json, logging, os
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -102,6 +102,11 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # logging
+
+## disable module loggers
+# existing_logger_names = logging.getLogger().manager.loggerDict.keys()
+# print '- EXISTING_LOGGER_NAMES, `%s`' % existing_logger_names
+logging.getLogger('requests').setLevel( logging.WARNING )
 
 LOGGING = {
     'version': 1,
