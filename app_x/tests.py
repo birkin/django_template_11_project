@@ -9,8 +9,8 @@ log = logging.getLogger(__name__)
 TestCase.maxDiff = None
 
 
-class UrlTest( TestCase ):
-    """ Checks basic urls. """
+class RootUrlTest( TestCase ):
+    """ Checks root urls. """
 
     def test_root_url_no_slash(self):
         """ Checks '/root_url'. """
@@ -26,4 +26,4 @@ class UrlTest( TestCase ):
         redirect_url = response._headers['location'][1]
         self.assertEqual(  '/info/', redirect_url )
 
-    # end class UrlTest()
+    # end class RootUrlTest()
