@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
 """
 WSGI config for django_template_project.
 
