@@ -61,7 +61,7 @@ template_dirs = json.loads( os.environ['DJANGO_TEMPLATE__TEMPLATES_JSON'] )
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ template_dirs ],
+        'DIRS': template_dirs,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
