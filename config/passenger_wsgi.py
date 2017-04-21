@@ -26,6 +26,7 @@ This allows not only the sourcing, but also creates the env-var used below by sh
 
 import os, pprint, sys
 import shellvars
+from django.core.wsgi import get_wsgi_application
 
 
 # print( 'the initial env, ```{}```'.format( pprint.pformat(dict(os.environ)) ) )
@@ -47,5 +48,4 @@ for ( key, val ) in var_dct.items():
 # print( 'the final env, ```{}```'.format( pprint.pformat(dict(os.environ)) ) )
 
 ## gogogo
-from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
