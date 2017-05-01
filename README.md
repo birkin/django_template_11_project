@@ -34,6 +34,7 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
         - change all `env_min_djng` references to name of env
     - with new env activated, pip update it from requirements.txt
         - update requirements.txt with versions
+        - suggested: `pip install ipython` -- it'll make experimentation lots easier
 
 - log
     - make log dir, ensuring permissions are correct
