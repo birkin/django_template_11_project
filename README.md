@@ -1,7 +1,92 @@
 ##### overview
 
-Minimalist [passenger](https://www.phusionpassenger.com)-compatible [django](https://www.djangoproject.com) project.
+Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#runserver) and [passenger](https://www.phusionpassenger.com)-compatible [django](https://www.djangoproject.com) project.
 
-Part of [new-project TODO list](https://gist.github.com/birkin/04a0a124d49be02e3d58).
+---
+
+
+##### todo checklist
+
+(in process of converting from python 2.7.x instructions)
+
+(eventually pieces of this could be scripted)
+
+- assumes python 3.6.x
+
+- main
+    - make 'stuff' dir
+    - make env
+
+            /path/to/python3 -m venv /path/to/project_x_stuff/env_x
+
+        - source new env, and run: `pip install --upgrade pip`
+    - git clone existing app, or...
+        - `git clone https://github.com/birkin/django_template_project.git ./project_x`
+            - remove the .git/ dir
+        - set up in SourceTree (git init)
+        - push to GitHub
+    - make sublime project
+    - update names
+        - change all `django_template_project` references to name of project
+        - change all `app_x` references to actual name of app
+        - include in above app_x and app_x_templates directories
+        - change all `DJANGO_TEMPLATE__` settings references to name of project-settings prefix
+        - change all `env_min_djng` references to name of env
+    - with new env activated, pip update it from requirements.txt
+        - update requirements.txt with versions
+
+- log
+    - make log dir, ensuring permissions are correct
+    - touch a project_x.log file, and update 'owner/group', and update group-permissions
+    - add log to system's logrotate
+    - add dir to sublime project
+    - Note: initial run may create an empty logfile with an incorrect owner, causing an error. If this happens, simply update the owner -- the subsequent system's logrotate will ensure the log-file's permissions remain correct.
+
+- settings
+    - make settings dir and .sh file
+    - update activate.py and/or activate_this.py ([like this](https://gist.github.com/birkin/48dbcc68d3ebbf355e69))
+    - add needed items along the way; eg, in django:
+        - one way to see what needs set: source the environment and run `python ./manage.py check`
+        - new secret-key ([helpful code](https://gist.github.com/birkin/0f6245dd7eeb24c0f5ad))
+        - db
+        - project's django_media directory
+    - add dir to sublime project
+
+- update
+    - add git-pull script (w/set-permissions) & run it
+    - once this works, source the env and try a `python ./manage.py check`
+
+- other
+    - webapp
+        - create db if necessary
+            - django:
+                - run `python ./manage.py migrate` to create tables
+                    - if expected tables aren't created, may need to run `python ./manage.py migrate --run-syncdb`
+                - run `python ./manage.py createsuperuser` for the admin user prompt
+        - django:
+            - test with `python ./manage.py check` and then...
+            - `python ./manage.py runserver host:port`, and hit host/port with browser or `curl`
+            - add session-clearance crontab entry in format:
+
+                    random_minute 01 * * * cd /path/to/project_stuff/project/; source ../env_prj/bin/activate > /dev/null; ../env_prj/bin/python ./manage.py clearsessions
+
+        - https-ify project & shib-ify admin & login urls
+        - setup apache handoff to python
+        - restart apache if web-app
+    - [site-checker](http://library.brown.edu/services/site_checker/status/) entry
+    - [software-tracker entry](https://library.brown.edu/projects/software/apps/)
+    - cron work if necessary (besides possible django session work listed above)
+        - update crontab via (one-line):
+
+                cd /to/main/dir; source ../env/bin/activate; ../env/bin/python ./the_script.py
+
+---
+
+
+##### other
+
+- last [python 2.7.x version of the todo checklist](https://gist.github.com/birkin/04a0a124d49be02e3d58/0fa4732b15cb524aec00f20fb08a5c4c9f0e0742)
+
+---
 
 ---
