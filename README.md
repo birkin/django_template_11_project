@@ -39,6 +39,7 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
 - log
     - make log dir, ensuring permissions are correct
     - touch a project_x.log file, and update 'owner/group', and update group-permissions
+        - note, if setting up on a production-server, make the owner the apache user, and the group the shared-group
     - add log to system's logrotate
     - add dir to sublime project
     - Note: initial run may create an empty logfile with an incorrect owner, causing an error. If this happens, simply update the owner -- the subsequent system's logrotate will ensure the log-file's permissions remain correct.
@@ -61,7 +62,10 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
     - webapp
         - create db if necessary
             - django:
-                - run `python ./manage.py migrate` to create tables
+                - run `python ./manage.py makemigrations --empty name_of_app` to initialize stuff
+                - run `python ./manage.py makemigrations --dry-run` to see what will be done with the real command
+                - run `python ./manage.py makemigrations`
+                - run `python ./manage.py migrate` to actually create tables
                     - if expected tables aren't created, may need to run `python ./manage.py migrate --run-syncdb`
                 - run `python ./manage.py createsuperuser` for the admin user prompt
         - django:
