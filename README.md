@@ -31,7 +31,6 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
         - change all `app_x` references to actual name of app
         - include in above app_x and app_x_templates directories
         - change all `DJANGO_TEMPLATE__` settings references to name of project-settings prefix
-        - change all `env_min_djng` references to name of env
     - with new env activated, pip update it from requirements.txt
         - update requirements.txt with versions
         - suggested: `pip install ipython` -- it'll make experimentation lots easier
