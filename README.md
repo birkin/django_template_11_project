@@ -45,7 +45,13 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
 
 - settings
     - make settings dir and .sh file
-    - update activate.py and/or activate_this.py ([like this](https://gist.github.com/birkin/48dbcc68d3ebbf355e69))
+    - update activate.py like this:
+
+            export PREFIX__SETTINGS_PATH="/path/to/project_env_settings.sh"
+            source $PREFIX__SETTINGS_PATH
+
+        - be sure the exported-path-var matches the environmental-variable accessed by the `ENV_SETTINGS_FILE` entry in `config/passenger_wsgi.py`
+
     - add needed items along the way; eg, in django:
         - one way to see what needs set: source the environment and run `python ./manage.py check`
         - new secret-key ([helpful code](https://gist.github.com/birkin/0f6245dd7eeb24c0f5ad))
