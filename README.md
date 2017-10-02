@@ -45,7 +45,7 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
 
 - settings
     - make settings dir and .sh file
-    - update activate.py like this:
+    - update env/bin/activate.py like this:
 
             export PREFIX__SETTINGS_PATH="/path/to/project_env_settings.sh"
             source $PREFIX__SETTINGS_PATH
