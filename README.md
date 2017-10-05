@@ -7,8 +7,6 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
 
 ##### todo checklist
 
-(in process of converting from python 2.7.x instructions)
-
 (eventually pieces of this could be scripted)
 
 - assumes python 3.6.x
@@ -55,7 +53,7 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
     - add needed items along the way; eg, in django:
         - one way to see what needs set: source the environment and run `python ./manage.py check`
         - new secret-key ([helpful code](https://gist.github.com/birkin/0f6245dd7eeb24c0f5ad))
-        - db
+        - db if needed
         - project's django_media directory
     - add dir to sublime project
 
