@@ -30,6 +30,7 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
         - include in above app_x and app_x_templates directories
         - change all `DJANGO_TEMPLATE__` settings references to name of project-settings prefix
     - with new env activated, pip update it from requirements.txt
+        - note that version of Django is _partially_ specified -- this is the latest [long-term-support version](https://docs.djangoproject.com/en/dev/internals/release-process/)
         - update requirements.txt with versions
         - suggested: `pip install ipython` -- it'll make experimentation lots easier
 
