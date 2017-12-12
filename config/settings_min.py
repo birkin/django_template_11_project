@@ -169,7 +169,7 @@ LOGGING = {
     },
     'loggers': {
         'app_x': {
-            'handlers': ['logfile'],
+            'handlers': ['logfile', 'console'],
             'level': os.environ.get(u'DJANGO_TEMPLATE__LOG_LEVEL'),
             'propagate': False
         },
