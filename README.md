@@ -57,6 +57,7 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
         - new secret-key ([helpful code](https://gist.github.com/birkin/0f6245dd7eeb24c0f5ad))
         - db if needed
         - project's django_media directory
+            - hitting the [runserver admin link](http://127.0.0.1:8000/admin/) is a good way to check the django_media directory and db
 
 - update
     - add git-pull script (w/set-permissions) & run it
