@@ -44,12 +44,24 @@ Template [runserver](https://docs.djangoproject.com/en/1.11/ref/django-admin/#ru
 
 - settings
     - make settings dir and .sh file
-    - update env/bin/activate.py like this:
+    - update `env/bin/activate.py` in two areas:
 
-            export PREFIX__SETTINGS_PATH="/path/to/project_env_settings.sh"
-            source $PREFIX__SETTINGS_PATH
+        - add this to the last line of the `deactivate` function...
 
-        - be sure the exported-path-var matches the environmental-variable accessed by the `ENV_SETTINGS_FILE` entry in `config/passenger_wsgi.py`
+                unset $(env | grep PREFIX__ | cut -d= -f1 | xargs)
+
+            (this will remove any application-specific env-vars when the virtual-environment is deactivated or re-sourced)
+
+        - add this to the end of the `activate` file...
+
+                export PREFIX__SETTINGS_PATH="/path/to/project_env_settings.sh"
+                source $PREFIX__SETTINGS_PATH
+
+            (this sets an env-var needed by `passenger_wsgi.py`)
+
+        - notes...
+            - substitute the app-specific env-var prefix for `PREFIX__` above
+            - be sure the exported-path env-var matches the environmental-variable accessed by the `ENV_SETTINGS_FILE` entry in `config/passenger_wsgi.py`
 
     - add dir to sublime project
     - add needed items along the way; eg, in django:
