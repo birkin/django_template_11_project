@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
+import json, os
 
 
-FOO = 'BAR'
-
-FOO2 = os.environ['FOO2']
+README_URL = os.environ['APP_X__README_URL']

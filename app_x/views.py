@@ -11,7 +11,18 @@ log = logging.getLogger(__name__)
 
 
 def info( request ):
-    """ Returns simplest response. """
-    now = datetime.datetime.now()
-    log.debug( 'now time, `%s`' % now )
-    return HttpResponse( '<p>hi</p> <p>( %s )</p>' % now )
+    """ Returns basic info. """
+    start = datetime.datetime.now()
+    rtrn_dct = {
+        'query': {
+            'date_time': str( start ),
+            'url': '{schm}://{hst}{uri}'.format( schm=request.scheme, hst=request.META['HTTP_HOST'], uri=request.META['REQUEST_URI'] )
+        },
+        'response': {
+            'documentation': settings_app.README_URL,
+            'elapsed_time': str( datetime.datetime.now() - start ),
+            'message': 'ok'
+        }
+    }
+    jsn = json.dumps( rtrn_dct, sort_keys=True, indent=2 )
+    return HttpResponse( jsn, content_type='application/javascript; charset=utf-8' )
