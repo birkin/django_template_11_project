@@ -124,6 +124,7 @@ STATIC_ROOT = os.environ['DJANGO_TEMPLATE__STATIC_ROOT']  # needed for collectst
 
 
 # Email
+SERVER_EMAIL = os.environ['DJANGO_TEMPLATE__SERVER_EMAIL']
 EMAIL_HOST = os.environ['DJANGO_TEMPLATE__EMAIL_HOST']
 EMAIL_PORT = int( os.environ['DJANGO_TEMPLATE__EMAIL_PORT'] )
 
