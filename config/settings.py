@@ -153,6 +153,11 @@ LOGGING = {
         },
     },
     'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        },
         'logfile': {
             'level':'DEBUG',
             'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
@@ -166,8 +171,14 @@ LOGGING = {
         },
     },
     'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+            },
         'app_x': {
-            'handlers': ['logfile', 'console'],
+            # 'handlers': ['logfile', 'console'],  # leaving here as reminder that this is how to show output in the terminal
+            'handlers': ['logfile'],
             'level': os.environ.get(u'DJANGO_TEMPLATE__LOG_LEVEL'),
             'propagate': False
         },
