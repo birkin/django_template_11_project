@@ -55,7 +55,7 @@ def make_context( request, rq_now, info_txt, taken ):
             'timestamp': str( rq_now )
         },
         'response': {
-            'documentation': settings_app.DOCUMENTATION_URL,
+            'documentation': settings_app.README_URL,
             'version': info_txt,
             'elapsed_time': str( taken )
         }
