@@ -35,7 +35,7 @@ def info( request ):
 #         Called by click on login or admin link. """
 #     next_url = request.GET.get( 'next', None )
 #     if not next_url:
-#         redirect_url = reverse( 'admin:bul_cbp_app_tracker_changelist' )
+#         redirect_url = reverse( settings_app.POST_LOGIN_ADMIN_REVERSE_URL )
 #     else:
 #         redirect_url = request.GET['next']  # will often be same page
 #     log.debug( 'redirect_url, ```%s```' % redirect_url )
