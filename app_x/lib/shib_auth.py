@@ -2,7 +2,8 @@
 
 """ By default, this module is not accessed.
     To use:
-    - enable login url in urls.py
+    - shib-protect the `/project/login/` url
+    - enable the two login urls in urls.py
     - enable import and function in views.py
     - enable settings in settings_app.py """
 
