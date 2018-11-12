@@ -93,6 +93,7 @@ class LoginDecoratorHelper(object):
             usr.is_superuser = True
         if netid in settings_app.STAFF_USERS:
             usr.is_staff = True
+        # usr.is_staff = True  # use this and comment out the two lines above if, say, you define a shib-group to be able to log-in
         try:
             usr = self.update_user( usr, meta_dct )
         except Exception as e:
