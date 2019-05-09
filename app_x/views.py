@@ -30,14 +30,15 @@ def info( request ):
 
 
 def error_check( request ):
-    """ For checking that admins receive error-emails.
-        To view error-emails: run, in another terminal window: `python -m smtpd -n -c DebuggingServer localhost:1026`
+    """ For an easy way to check that admins receive error-emails (in development).
+        To view error-emails in runserver-development:
+        - run, in another terminal window: `python -m smtpd -n -c DebuggingServer localhost:1026`,
+        - (or substitue your own settings for localhost:1026)
     """
     if project_settings.DEBUG == True:
         1/0
     else:
         return HttpResponseNotFound( '<div>404 / Not Found</div>' )
-
 
 
 # @shib_login
