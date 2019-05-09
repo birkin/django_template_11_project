@@ -29,6 +29,17 @@ def info( request ):
     return HttpResponse( output, content_type='application/json; charset=utf-8' )
 
 
+def error_check( request ):
+    """ For checking that admins receive error-emails.
+        To view error-emails: run, in another terminal window: `python -m smtpd -n -c DebuggingServer localhost:1026`
+    """
+    if project_settings.DEBUG == True:
+        1/0
+    else:
+        return HttpResponseNotFound( '<div>404 / Not Found</div>' )
+
+
+
 # @shib_login
 # def login( request ):
 #     """ Handles authNZ, & redirects to admin.
