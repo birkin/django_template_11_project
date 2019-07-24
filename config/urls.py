@@ -15,7 +15,7 @@ urlpatterns = [
 
     url( r'^admin/', admin.site.urls ),  # eg host/project_x/admin/
 
-    url( r'^info/$', views.info, name='info_url' ),
+    url( r'^version/$', views.version, name='version_url' ),
 
     url( r'^error_check/$', views.error_check, name='error_check_url' ),
 

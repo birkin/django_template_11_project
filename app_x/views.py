@@ -14,9 +14,8 @@ from django.shortcuts import get_object_or_404, render
 log = logging.getLogger(__name__)
 
 
-def info( request ):
+def version( request ):
     """ Returns basic data including branch & commit. """
-    1/0  # tests admin error-emails (remove) -- view output via running, in another terminal window: `python -m smtpd -n -c DebuggingServer localhost:1026`
     # log.debug( 'request.__dict__, ```%s```' % pprint.pformat(request.__dict__) )
     rq_now = datetime.datetime.now()
     commit = view_info_helper.get_commit()
